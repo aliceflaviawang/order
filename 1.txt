@@ -1,0 +1,143 @@
+﻿1,根据岗位类型查询相关设岗人数
+http://localhost:8080/stu_assist_management/office/statistic.do
+
+POST(浏览器参数)
+Parameter:{	deptId:003,(必须传入) --学院代码
+            type:1（可选项） --查询的岗位类型 0.行政事务 1.学生事务 2.研究性工作
+		  }
+Result:{
+ {
+  "body": {
+   "total": 3,
+    "rows": [
+      {
+        "agreeJobNum": 0,
+        "deptId": "002",
+        "deptName": "电子工程学院",
+        "leftJobNum": 8,
+        "maxJobNum": 8,
+        "reviewJobNum": 0,
+        "type": 2
+      },
+  
+    {
+        "agreeJobNum": 0,
+        "deptId": "002",
+        "deptName": "电子工程学院",
+        "leftJobNum": 7,
+        "maxJobNum": 8,
+        "reviewJobNum": 1,
+        "type": 0
+      },
+      {
+        "agreeJobNum": 0,
+        "deptId": "002",
+        "deptName": "电子工程学院",
+        "leftJobNum": 8,
+        "maxJobNum": 8,
+        "reviewJobNum": 0,
+        "type": 1
+      }
+    ]
+  },
+  "message": "成功",
+  "status": 1
+}
+    ]
+  },
+  "message": "成功",
+  "status": 1
+}
+}
+2,设岗申请
+http://localhost:8080/stu_assist_management/office/apply.do
+POST(JSON)
+Parameter:{
+	"officeName":"研究生科",  --设岗科室名称
+	"teacherName":"高老师",
+	"telephone":"123456",
+	"jobNum":5,  --岗位数
+	"jobWork":"70学时/人/月",  --科室岗位工作量
+	"jobTime":"2017年3月-2018年2月",  --岗位时间
+	"guideTrain":"1、每周一次工作交流会",  --指导与培训体系
+	"responsibility":"协助研究生科老师完成硕士及博士研究生招生、教学、培养及答辩等相关工作。",   --科室岗位工作职责
+	"deptId":"003",  --单位名称代码，下拉列表（超级管理员可以下拉选择，部门管理员则不能）
+	"ability":"语言表达能力",  --科室岗位培养的综合素质
+	"type":1,  --岗位类型 0.行政事务 1.学生事务 2.研究性工作
+	"applyTime":"2017-01-16 15:57:07",  --申请时间
+	"applyerName":"Hong" --申请人姓名(即当前登录的用户名)
+}
+Result:{"message":"成功","status":1}
+
+3,分页查询岗位(每个字段的含义需要注明)
+http://localhost:8080/stu_assist_management/office/searchByPage.do
+POST(浏览器参数)
+Parameter:{ deptId:"003",teacherName:"孟阳",officeName:"研究生科","type":1,page:1,rows:5}
+Result:{
+  "body": {
+    "total": 1,
+    "rows": [
+      {
+        "ability": "语言表达能力",   --科室岗位培养的综合素质
+        "applyTime": 1484553427000, --申请时间
+        "applyerName": "Hong",  --申请人姓名
+        "cancelPublishTime": 1490764648000,  --取消发布时间
+        "cancelPublisherName": "无",  --取消发布人姓名
+        "deptId": "003",  --学院部门编号
+		"deptName": "微电子与固体电子学院", --学院名称
+        "existAssistNum": 1,  --已有助管人数
+        "guideTrain": "1、每周一次工作交流会",  --指导与培训体系
+        "id": 1,
+        "jobNum": 5,  --岗位数
+        "jobStatus": 0,  --岗位状态:0:已提交待审核，1:审核通过，2:审核不通过，3:已发布
+        "jobTime": "2017年3月-2018年2月",  --岗位时间
+        "jobWork": "70学时/人/月",   --科室岗位工作量
+        "officeName": "研究生科",  --设岗科室名称
+        "publishTime": 1490764645000,  --岗位发布时间
+        "publisherName": "无",  --岗位发布人姓名
+        "reason": "无",  --备注：用于填写当审核不通过时的原因，或其他用途
+        "responsibility": "协助研究生科老师完成硕士及博士研究生招生、教学、培养及答辩等相关工作。",
+        "reviewTime": 1490764642000,  --审核时间
+        "reviewerName": "无",  --审核人
+        "teacherName": "孟阳",  --老师姓名
+        "telephone": "61830618",  --老师电话
+        "type": 1,   --岗位类型代码 0.行政事务 1.学生事务 2.研究性工作
+        "typeName": "学生事务"  --岗位类型名称
+      }
+    ]
+  },
+  "message": "成功",
+  "status": 1
+}
+//记录岗位审核通过/不通过时的审核人员和日期
+//记录岗位发布时的发布人员和日期
+4、岗位审核通过
+http://localhost:8080/stu_assist_management/office/officeReview/agree.do
+POST(JSON)
+Parameter:{
+    "officeList":1,2,3  --审核通过的记录主键id,以,分割
+}
+Result:{
+  "message": "成功",
+  "status": 1
+}
+5、岗位审核不通过
+http://localhost:8080/stu_assist_management/office/officeReview/disagree.do
+POST(JSON)
+Parameter:{
+    "officeList":1,2,3  --审核不通过的记录主键id,以,分割
+}
+Result:{
+  "message": "成功",
+  "status": 1
+}
+6、岗位审核通过后发布
+http://localhost:8080/stu_assist_management/office/officePublish.do
+POST(JSON)
+Parameter:{
+    "officeList":1,2,3  --审核通过的记录主键id,以,分割
+}
+Result:{
+  "message": "成功",
+  "status": 1
+}
